@@ -29,7 +29,7 @@ Our solution aims personalized recommendations, job descriptions, and salary ins
 
 | Register | Login |
 |---|---|
-| ![register](img/signup.png) | ![login](img/login.png) |
+| ![register](img/signurl.png) | ![login](img/login.png) |
 
 * The dashboard keeps track of the user's progress and also gives the user some additional options and features so that he can get a guided and defined path for his career.
   
