@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>FAQ - IT Career Navigator</title>
+
+  <!-- Google font + Font Awesome (CDN) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <style>
+    /* ---------------------------
+       Reset + base
+    ---------------------------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f3f6ff 0%, #fbfdff 100%);
+      color: #17223b;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding: 28px 20px;
+    }
+
+    /* ---------------------------
+       Container / layout
+    ---------------------------- */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Left sidebar (mini nav) */
+    .side {
+      background: linear-gradient(180deg, #0f1724, #142433);
+      color: #e6eefc;
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 420px;
+      box-shadow: 0 6px 20px rgba(8,21,40,0.08);
+    }
+    .side h3 { font-size: 14px; margin-bottom: 12px; letter-spacing: 0.6px; color: #bcd1ff; }
+    .side p { font-size: 13px; color: #cfe3ff; opacity: 0.9; margin-bottom: 18px; }
+    .side .nav-item {
+      display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius:8px;
+      color:#e6eefc; text-decoration:none; margin-bottom:8px; font-size:14px;
+      transition: all .18s ease;
+    }
+    .side .nav-item:hover { background: rgba(255,255,255,0.04); transform: translateX(4px); }
+
+    .side .nav-item i { width:22px; text-align:center; color:#9fc1ff; }
+
+    /* Main content */
+    .main {
+      background: #ffffff;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(16,24,40,0.06);
+    }
+
+    .main .header {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+    .main h1 { font-size:20px; color:#0b1430; }
+    .subtitle { color:#556077; font-size:13px; }
+
+    /* Search */
+    .search {
+      width: 100%;
+      display:flex;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+    .search input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #e6eef6;
+      background: #fbfdff;
+      outline: none;
+      font-size:14px;
+      box-shadow: inset 0 1px 0 rgba(12,20,30,0.02);
+    }
+    .search .icon {
+      display:inline-flex; align-items:center; justify-content:center;
+      background:#eef4ff; padding:10px 12px; border-radius:10px; color:#2b6be6;
+      border:1px solid #e2edff;
+    }
+
+    /* Accordion list */
+    .faq-list { display:flex; flex-direction:column; gap:8px; }
+    .faq-card {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #eef3fb;
+      transition: all .25s ease;
+      background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+    }
+    .faq-top {
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 18px; cursor:pointer;
+    }
+    .faq-meta { display:flex; gap:12px; align-items:center; min-width:0; }
+    .faq-title {
+      font-weight:600; color:#0b1630; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .faq-badge {
+      background:#eef6ff; color:#1657e6; font-weight:600; font-size:12px;
+      padding:6px 8px; border-radius:999px; margin-left:8px;
+    }
+    .faq-arrow { color:#6b7a99; transition: transform .22s ease; }
+
+    .faq-body {
+      padding: 0 18px 16px 18px;
+      border-top: 1px solid #f1f6fb;
+      color:#2f3a55;
+      font-size:14px;
+      line-height:1.6;
+      display: none;
+    }
+
+    /* when active */
+    .faq-card.open { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(11,23,52,0.06); }
+    .faq-card.open .faq-arrow { transform: rotate(180deg); }
+    .faq-card.open .faq-body { display:block; }
+
+    /* helper small text on right */
+    .meta-right { color:#7e8aa3; font-size:13px; }
+
+    /* footer link row */
+    .bottom-actions { display:flex; gap:12px; margin-top:18px; align-items:center; }
+    .btn {
+      padding:10px 14px; border-radius:8px; font-weight:600; font-size:14px; text-decoration:none;
+      border: none; cursor:pointer;
+    }
+    .btn.primary { background: linear-gradient(90deg,#4f46e5,#2b6be6); color:white; box-shadow: 0 8px 20px rgba(43,107,230,0.18); }
+    .btn.ghost { background: transparent; border:1px solid #e9eef9; color:#24314a; }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .page { grid-template-columns: 1fr; padding: 16px; }
+      .side { order: 2; display:flex; gap:10px; }
+      .main { order: 1; margin-bottom: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- LEFT: small sidebar -->
+    <aside class="side">
+      <h3>DASHBOARD</h3>
+      <p>IT Career Navigator — support & help</p>
+
+      <!-- quick nav (these are purely visual) -->
+      <a class="nav-item" href="/"><i class="fa fa-home"></i> <span>Home</span></a>
+      <a class="nav-item" href="/iq"><i class="fa fa-brain"></i> <span>IQ Test</span></a>
+      <a class="nav-item" href="/chat"><i class="fa fa-comments"></i> <span>Chat Assistance</span></a>
+      <a class="nav-item" href="/faq"><i class="fa fa-question-circle"></i> <span style="font-weight:700">FAQ</span></a>
+
+      <div style="margin-top:14px; border-top:1px dashed rgba(255,255,255,0.06); padding-top:14px;">
+        <small style="opacity:0.9; display:block; margin-bottom:8px;">Still stuck?</small>
+        <a class="nav-item" href="/dashboard"><i class="fa fa-arrow-left"></i> Return to dashboard</a>
+      </div>
+    </aside>
+
+    <!-- RIGHT: main -->
+    <main class="main">
+      <div class="header">
+        <div>
+          <h1>Frequently Asked Questions</h1>
+          <div class="subtitle">Answers to common questions about using the IT Career Navigator</div>
+        </div>
+
+        <div style="min-width:280px;">
+          <div class="search" role="search" aria-label="FAQ search">
+            <input id="faqSearch" placeholder="Search FAQs (type keywords like 'resume', 'register', 'skills')" />
+            <div class="icon"><i class="fa fa-search"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-list" id="faqList">
+
+        <!-- 25 FAQ items (question in .faq-title, answer in .faq-body) -->
+        <div class="faq-card" data-keywords="what is it career navigator overview">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">1. What is the IT Career Navigator?</div>
+              <div class="faq-badge">Overview</div>
+            </div>
+            <div class="meta-right">
+              <span class="faq-arrow"><i class="fa fa-chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="faq-body">
+            IT Career Navigator is a guided tool that helps you discover suitable IT career paths based on your skills, interests, and goals. It gives personalized learning roadmaps, project suggestions and role information.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="how does it work recommendation matching algorithm">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">2. How does this platform generate recommendations?</div>
+              <div class="faq-badge">Process</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            The platform collects your skills, preferences and assessment results, then matches them to role profiles using rules and/or ML models to produce ranked career suggestions and learning steps.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="who is target users students freshers professionals">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">3. Who should use this tool?</div>
+              <div class="faq-badge">Users</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Students, freshers, career-switchers and professionals looking to upskill in IT will benefit most from the personalized guidance and learning roadmaps.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="do i need technical knowledge beginner friendly">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">4. Do I need prior technical knowledge?</div>
+              <div class="faq-badge">Beginner</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            No — you can start as a beginner. The system tailors learning paths from foundational topics up to advanced skills depending on your chosen role.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="update profile skills edit change profile">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">5. Can I update my skills or profile later?</div>
+              <div class="faq-badge">Profile</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes. Update your profile any time — the recommendations refresh so you always get relevant guidance as your skills grow.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="learning path roadmap courses resources">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">6. What does a learning roadmap include?</div>
+              <div class="faq-badge">Roadmap</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Roadmaps typically include core topics, recommended courses, practice projects, important tools, and suggested timelines to reach job-ready skill levels.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="resume suggestions portfolio github projects">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">7. Does the platform give resume or portfolio suggestions?</div>
+              <div class="faq-badge">Career</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes — each recommended role includes tips on key skills to list, project ideas and formatting hints to make your resume and portfolio stand out.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="salary range job demand market trends">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">8. Are salary ranges and job demand shown?</div>
+              <div class="faq-badge">Market</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            The app provides indicative salary ranges and demand signals where available so you can compare roles — these values are for guidance and may vary by region and experience.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="data privacy personal data stored shared">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">9. How is my personal data handled?</div>
+              <div class="faq-badge">Privacy</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Only the minimum profile information is stored to provide recommendations. Do not share sensitive data. Data is not shared externally in the current setup.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="faq search filter find question">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">10. How do I search FAQs?</div>
+              <div class="faq-badge">Help</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Use the search box at the top to filter FAQs by keywords — titles and hidden keyword tags are matched in real time.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="compare careers compare roles">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">11. Can I compare multiple career paths?</div>
+              <div class="faq-badge">Compare</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes. The platform allows side-by-side comparison of roles based on skills, salary, demand and learning difficulty.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="offline online courses resources">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">12. Does it recommend courses or books?</div>
+              <div class="faq-badge">Learning</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes — learning suggestions include curated online courses, documentation, tutorials and project ideas to practice real skills.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="projects portfolio practice ideas">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">13. What project suggestions will I get?</div>
+              <div class="faq-badge">Projects</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Projects are role-specific — for example a web dev path suggests building a full-stack app, while data roles suggest datasets and analysis-oriented projects.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="nlp ml ai usage chatbot assistant">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">14. Is there a chat assistant available?</div>
+              <div class="faq-badge">Assistant</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            A chat assistance feature may be available to help answer questions or explain a roadmap — it depends on your current project version and configuration.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="multilingual languages support">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">15. Does it support multiple languages?</div>
+              <div class="faq-badge">Intl</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            The baseline version is English-first. Multilingual support can be added if needed by providing translated content and UI strings.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="saved bookmarked favourite careers">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">16. Can I save/bookmark a recommended career?</div>
+              <div class="faq-badge">Save</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes — you can bookmark or save career paths to review later from your dashboard.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="assessment test iq aptitude results">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">17. How does the IQ/Aptitude test affect recommendations?</div>
+              <div class="faq-badge">Assessment</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Assessment results help identify strengths and gaps so the recommended roadmap focuses on the areas you need to improve for a chosen role.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="mobile responsive app phone view">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">18. Is the dashboard mobile-friendly?</div>
+              <div class="faq-badge">Mobile</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes, the UI is responsive; the layout adapts to smaller screens and the FAQ accordion remains accessible on mobile devices.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="integrations linkedin indeed apis">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">19. Can it connect to job sites or LinkedIn?</div>
+              <div class="faq-badge">Integrations</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Integrations (LinkedIn, job APIs) can be added to enrich role and market data — they are optional enhancements for production.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="cost money pricing premium features">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">20. Is the service free or paid?</div>
+              <div class="faq-badge">Pricing</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            The core features (recommendations and basic roadmaps) are free in the current version. Advanced features like integrations or premium content may require payment.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="support contact help email">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">21. How do I get additional help or support?</div>
+              <div class="faq-badge">Support</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Use the chat assistance or contact your project admin. Add an email or support link in your production deployment for users to reach out.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="feedback improvement suggest changes">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">22. How can I suggest new features or give feedback?</div>
+              <div class="faq-badge">Feedback</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+            <div class="faq-body">
+              Feedback can be collected via a simple feedback form or GitHub issues in your project repo. Encourage users to share problems and ideas.
+            </div>
+        </div>
+
+        <div class="faq-card" data-keywords="security password session login">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">23. Is login and session information secure?</div>
+              <div class="faq-badge">Security</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            For production, use secure session storage, HTTPS, and hashed passwords (bcrypt). The sample project may use simple storage — upgrade for real deployments.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="extending customization developer api">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">24. Can developers extend or customize the recommendations?</div>
+              <div class="faq-badge">Dev</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Yes — the rules, datasets and ML components are editable. Developers can plug in new mappings or models to tune recommendations.
+          </div>
+        </div>
+
+        <div class="faq-card" data-keywords="where to start first steps getting started">
+          <div class="faq-top">
+            <div class="faq-meta">
+              <div class="faq-title">25. Where should I start if I don't know anything?</div>
+              <div class="faq-badge">Getting started</div>
+            </div>
+            <div class="meta-right"><span class="faq-arrow"><i class="fa fa-chevron-down"></i></span></div>
+          </div>
+          <div class="faq-body">
+            Start with the basic skills suggested for a beginner role (like Web Development fundamentals or Python basics). Take the aptitude test, fill your profile, then follow the beginner roadmap.
+          </div>
+        </div>
+
+      </div> <!-- /faq-list -->
+
+      <div class="bottom-actions">
+        <a class="btn primary" href="/">Back to Dashboard</a>
+        <button id="collapseAll" class="btn ghost">Collapse all</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Accordion behavior
+    (function(){
+      const list = document.getElementById('faqList');
+      list.addEventListener('click', (e) => {
+        // find .faq-top click
+        const top = e.target.closest('.faq-top');
+        if (!top) return;
+        const card = top.parentElement;
+        // toggle open (allow multiple open)
+        card.classList.toggle('open');
+      });
+
+      // Search filter
+      const search = document.getElementById('faqSearch');
+      search.addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        const cards = Array.from(document.querySelectorAll('.faq-card'));
+        cards.forEach(card => {
+          const title = card.querySelector('.faq-title').textContent.toLowerCase();
+          const body = card.querySelector('.faq-body').textContent.toLowerCase();
+          const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+          const match = !q || title.includes(q) || body.includes(q) || keywords.includes(q);
+          card.style.display = match ? '' : 'none';
+        });
+      });
+
+      // collapse all
+      document.getElementById('collapseAll').addEventListener('click', () => {
+        document.querySelectorAll('.faq-card.open').forEach(c => c.classList.remove('open'));
+      });
+
+      // Keyboard: press "/" to focus search
+      window.addEventListener('keydown', (ev) => {
+        if (ev.key === '/' && document.activeElement !== search) {
+          ev.preventDefault();
+          search.focus();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
+

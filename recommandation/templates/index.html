@@ -1,34 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Career Input</title>
-		<link
-			rel="stylesheet"
-			href="{{ url_for('static', filename='style.css') }}"
-		/>
-		<link rel="stylesheet" href="../static/style.css" />
-		<script src="../static/script.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<h1 class="title">Career Input</h1>
-			<form method="POST" action="/recommend" class="input-form">
-				<label for="Class/Grade">Class/Grade:</label>
-				<input type="text" name="Class/Grade" id="Class/Grade" required /><br />
-				<label for="Skills">Skills:</label>
-				<input type="text" name="Skills" required /><br /><br />
-				<label for="Interests">What truly excites and engages you:</label>
-				<input type="text" name="Interests" required /><br /><br />
-				<label for="Hobbies">Your Areas of Fascination:</label>
-				<input type="text" name="Hobbies" required /><br /><br />
-				<label for="Passion">Your Intense Dedication in:</label>
-				<input type="text" name="Passion" required /><br /><br />
-				<label for="Favourite Subject">Favorite Subject:</label>
-				<input type="text" name="Favourite Subject" required /><br /><br />
-				<input type="submit" value="Recommend Careers" class="submit-button" />
-			</form>
-		</div>
-	</body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1a1a1a;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            color: #1a1a1a;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background: #1e40af;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .form-section-title {
+            color: #1a1a1a;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-weight: 700;
+        }
+
+        .form-section-title:first-of-type {
+            margin-top: 0;
+            border-top: none;
+            padding-top: 0;
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            input[type="text"],
+            textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Career Recommendation System</h1>
+            <p>Discover your ideal career path based on your skills and interests</p>
+        </div>
+
+        <form method="POST" action="/recommend" class="input-form">
+            
+            <div class="form-section-title">Education & Background</div>
+            
+            <div class="form-group">
+                <label for="Class/Grade">Class/Grade</label>
+                <input type="text" name="Class/Grade" id="Class/Grade" placeholder="e.g., 12th, Bachelor, Master" required />
+            </div>
+
+            <div class="form-section-title">Your Skills & Interests</div>
+
+            <div class="form-group">
+                <label for="Skills">Your Top Skills</label>
+                <input type="text" name="Skills" id="Skills" placeholder="e.g., Python, Data Analysis, Leadership" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Interests">What excites and engages you?</label>
+                <input type="text" name="Interests" id="Interests" placeholder="e.g., Problem solving, Creativity, Technology" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Hobbies">Your Areas of Fascination</label>
+                <input type="text" name="Hobbies" id="Hobbies" placeholder="e.g., Gaming, Art, Sports" required />
+            </div>
+
+            <div class="form-section-title">Your Passion</div>
+
+            <div class="form-group">
+                <label for="Passion">Your Intense Dedication in</label>
+                <input type="text" name="Passion" id="Passion" placeholder="e.g., Artificial Intelligence, Education, Healthcare" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Favourite Subject">Favorite Subject</label>
+                <input type="text" name="Favourite Subject" id="Favourite Subject" placeholder="e.g., Physics, Economics, Literature" required />
+            </div>
+
+            <button type="submit" class="submit-button">
+                <i class="fas fa-search"></i> Get Career Recommendations
+            </button>
+        </form>
+    </div>
+</body>
 </html>

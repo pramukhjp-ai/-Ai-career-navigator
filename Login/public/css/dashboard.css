@@ -85,7 +85,11 @@ nav i {
 	color: rgb(43, 43, 43);
 }
 .main-body {
-	padding: 10px 10px 10px 20px;
+	padding: 20px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 20px;
+	grid-auto-rows: minmax(180px, auto);
 }
 h1 {
 	margin: 20px 10px;
@@ -144,44 +148,145 @@ h1 {
 	color: blueviolet;
 }
 .job_card {
-	width: 100%;
-	padding: 15px;
+	padding: 20px;
 	cursor: pointer;
 	display: flex;
+	flex-direction: column;
 	border-radius: 10px;
 	background: #fff;
-	margin-bottom: 15px;
-	justify-content: space-between;
+	justify-content: flex-start;
 	border: 2px solid rgb(190, 190, 190);
-	box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+	height: 100%;
 }
 .job_details {
 	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	margin-bottom: 15px;
 }
 .job_details .img {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: 15px;
 }
 .job_details .img i {
-	width: 70px;
-	font-size: 3rem;
-	margin-left: 1rem;
-	padding: 10px;
-	color: rgb(82, 22, 138);
-	background: rgb(216, 205, 226);
+	width: 60px;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 2rem;
+	color: #667eea;
+	background: rgba(102, 126, 234, 0.1);
+	border-radius: 10px;
 }
 .job_details .text {
-	margin-left: 2.3rem;
+	width: 100%;
+}
+.job_details .text h2 {
+	font-size: 18px;
+	margin-bottom: 8px;
+	color: #333;
 }
 .job_details .text span {
 	color: rgb(116, 112, 112);
+	font-size: 14px;
+	display: block;
 }
 .job_salary {
-	text-align: right;
+	margin-top: auto;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	color: rgb(54, 54, 54);
+	font-size: 14px;
 }
-.job_card:active {
-	border: 2px solid blueviolet;
-	transition: 0.4s;
+.job_salary h4 {
+	font-size: 16px;
+	font-weight: 600;
+	color: #667eea;
+}
+.job_card:hover {
+	border: 2px solid #667eea;
+	box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+	transform: translateY(-3px);
+}
+
+/* Resume Builder Card Enhancement */
+.job_card:has(.fa-file-text) {
+	border: 2px solid rgb(190,190,190);
+	position: relative;
+	overflow: hidden;
+}
+
+.job_card:has(.fa-file-text):hover {
+	box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+	transform: translateY(-3px);
+}
+
+.job_card:has(.fa-file-text) .img i {
+	color: #667eea;
+	background: rgba(102, 126, 234, 0.1);
+	font-size: 2rem;
+}
+
+.job_card:has(.fa-file-text) .text h2 {
+	color: #333;
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.job_card:has(.fa-file-text) .text span {
+	color: rgb(116, 112, 112);
+	font-size: 14px;
+}
+
+.job_card:has(.fa-file-text) .job_salary a {
+	display: inline-block;
+	padding: 8px 16px;
+	background: #667eea;
+	color: white;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+	font-size: 14px;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.job_card:has(.fa-file-text) .job_salary a:hover {
+	background: #764ba2;
+	transform: scale(1.05);
+	box-shadow: 0 4px 12px rgba(118, 75, 162, 0.4);
+}
+
+.job_card:has(.fa-file-text) .job_salary a:hover {
+	background: #764ba2;
+	transform: scale(1.05);
+	box-shadow: 0 4px 12px rgba(118, 75, 162, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	.main-body {
+		grid-template-columns: 1fr;
+	}
+	
+	.container {
+		width: 100%;
+	}
+	
+	nav {
+		width: 100%;
+		height: auto;
+	}
+	
+	.main {
+		width: 100%;
+	}
 }

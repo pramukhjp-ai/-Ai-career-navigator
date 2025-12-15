@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - <%- resume.resumeTitle %></title>
+    <link rel="stylesheet" href="/css/resume.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-resume {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-resume h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .resume-view-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .resume-view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .resume-view-title {
+            margin: 0;
+            color: #667eea;
+        }
+
+        .resume-view-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .resume-document {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 1rem;
+        }
+
+        .full-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .professional-summary {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .experience-item,
+        .education-item,
+        .project-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .company-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .date-range {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .job-location {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .job-description {
+            margin-top: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .job-description ul {
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
+        }
+
+        .job-description li {
+            margin-bottom: 0.3rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: #f0f0f0;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .languages-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .language-level {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .certification-item {
+            margin-bottom: 1rem;
+        }
+
+        .cert-name {
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .cert-issuer {
+            color: #667eea;
+            font-size: 0.95rem;
+        }
+
+        .cert-date {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .project-name {
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .project-tech {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .project-description {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+            .resume-view-header {
+                display: none;
+            }
+            .resume-document {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .resume-document {
+                padding: 1.5rem;
+            }
+            .contact-info {
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar-resume">
+            <div class="logo-resume">
+                <h3>Resume Viewer</h3>
+            </div>
+            <div class="nav-links">
+                <a href="/resume/list" class="nav-link"><i class="fas fa-list"></i> My Resumes</a>
+            </div>
+        </nav>
+
+        <div class="resume-view-container">
+            <div class="resume-view-header">
+                <h1 class="resume-view-title"><%- resume.resumeTitle %></h1>
+                <div class="resume-view-actions">
+                    <button class="btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a href="/resume/<%- resume.id %>/download-pdf" class="btn-primary">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                    <a href="/resume/<%- resume.id %>/edit" class="btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+
+            <div class="resume-document">
+                <!-- Personal Information Header -->
+                <div class="resume-header">
+                    <h1 class="full-name"><%- resume.personalInfo.firstName %> <%- resume.personalInfo.lastName %></h1>
+                    <div class="contact-info">
+                        <% if (resume.personalInfo.email) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span><%- resume.personalInfo.email %></span>
+                            </div>
+                        <% } %>
+                        <% if (resume.personalInfo.phone) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span><%- resume.personalInfo.phone %></span>
+                            </div>
+                        <% } %>
+                        <% if (resume.personalInfo.location) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><%- resume.personalInfo.location %></span>
+                            </div>
+                        <% } %>
+                        <% if (resume.personalInfo.linkedin) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-linkedin"></i>
+                                <span><%- resume.personalInfo.linkedin %></span>
+                            </div>
+                        <% } %>
+                        <% if (resume.personalInfo.portfolio) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-globe"></i>
+                                <span><%- resume.personalInfo.portfolio %></span>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Professional Summary -->
+                <% if (resume.professionalSummary) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Professional Summary</h2>
+                        <p class="professional-summary"><%- resume.professionalSummary %></p>
+                    </div>
+                <% } %>
+
+                <!-- Experience Section -->
+                <% if (resume.experience && resume.experience.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Experience</h2>
+                        <% resume.experience.forEach(exp => { %>
+                            <div class="experience-item">
+                                <p class="job-title"><%- exp.jobTitle %></p>
+                                <p class="company-name"><%- exp.company %></p>
+                                <p class="date-range">
+                                    <%- formatDate(exp.startDate) %> - <%- exp.isCurrentlyWorking ? 'Present' : formatDate(exp.endDate) %>
+                                </p>
+                                <p class="job-location"><%- exp.location || 'Location not specified' %></p>
+                                <% if (exp.description) { %>
+                                    <p class="job-description"><%- exp.description %></p>
+                                <% } %>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+
+                <!-- Education Section -->
+                <% if (resume.education && resume.education.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Education</h2>
+                        <% resume.education.forEach(edu => { %>
+                            <div class="education-item">
+                                <p class="job-title"><%- edu.degree %> in <%- edu.field %></p>
+                                <p class="company-name"><%- edu.school %></p>
+                                <p class="date-range">
+                                    <%- formatDate(edu.graduationDate) %>
+                                </p>
+                                <% if (edu.gpa) { %>
+                                    <p class="job-location">GPA: <%- edu.gpa %></p>
+                                <% } %>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+
+                <!-- Skills Section -->
+                <% if (resume.skills && resume.skills.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Skills</h2>
+                        <div class="skills-list">
+                            <% resume.skills.forEach(skill => { %>
+                                <span class="skill-tag"><%- skill %></span>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Certifications Section -->
+                <% if (resume.certifications && resume.certifications.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Certifications</h2>
+                        <% resume.certifications.forEach(cert => { %>
+                            <div class="certification-item">
+                                <p class="cert-name"><%- cert.certificationName %></p>
+                                <p class="cert-issuer"><%- cert.issuer %></p>
+                                <p class="cert-date">Issued: <%- formatDate(cert.issueDate) %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+
+                <!-- Projects Section -->
+                <% if (resume.projects && resume.projects.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Projects</h2>
+                        <% resume.projects.forEach(project => { %>
+                            <div class="project-item">
+                                <p class="project-name"><%- project.projectName %></p>
+                                <% if (project.technologies) { %>
+                                    <p class="project-tech"><%- project.technologies %></p>
+                                <% } %>
+                                <p class="project-description"><%- project.description %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+
+                <!-- Languages Section -->
+                <% if (resume.languages && resume.languages.length > 0) { %>
+                    <div class="resume-section">
+                        <h2 class="section-title">Languages</h2>
+                        <div class="languages-list">
+                            <% resume.languages.forEach(lang => { %>
+                                <div class="language-item">
+                                    <span><%- lang.language %></span>
+                                    <span class="language-level"><%- lang.proficiency %></span>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+        }
+    </script>
+</body>
+</html>

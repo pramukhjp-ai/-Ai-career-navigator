@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Analysis - <%- resume.resumeTitle %></title>
+    <link rel="stylesheet" href="/css/resume.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-resume {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-resume h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .analysis-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .analysis-header {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .analysis-title {
+            margin: 0;
+            color: #667eea;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .score-circle.excellent {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+        }
+
+        .score-circle.good {
+            background: linear-gradient(135deg, #74c0fc 0%, #4c6ef5 100%);
+        }
+
+        .score-circle.fair {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+        }
+
+        .score-circle.poor {
+            background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
+        }
+
+        .last-analyzed {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .score-bar {
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .score-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: width 0.5s ease;
+        }
+
+        .score-fill.formatting {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .score-fill.keyword {
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+        }
+
+        .score-fill.structure {
+            background: linear-gradient(90deg, #4c6ef5 0%, #364fc7 100%);
+        }
+
+        .section-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .strengths-list,
+        .suggestions-list,
+        .missing-keywords-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .strength-item,
+        .suggestion-item,
+        .missing-item {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .strength-item {
+            background: #e8f8f5;
+            border-left: 4px solid #51cf66;
+        }
+
+        .suggestion-item {
+            background: #fff3e0;
+            border-left: 4px solid #ffd43b;
+        }
+
+        .missing-item {
+            background: #f3e5f5;
+            border-left: 4px solid #667eea;
+        }
+
+        .strength-item i,
+        .suggestion-item i,
+        .missing-item i {
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .strength-item i {
+            color: #51cf66;
+        }
+
+        .suggestion-item i {
+            color: #ffd43b;
+        }
+
+        .missing-item i {
+            color: #667eea;
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .keywords-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .keyword-tag {
+            background: #f0f0f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            color: #333;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .keyword-tag.found {
+            background: #e8f8f5;
+            border-color: #51cf66;
+            color: #51cf66;
+            font-weight: 600;
+        }
+
+        .keyword-tag.missing {
+            background: #ffe3e3;
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .score-circle {
+                margin-top: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons a,
+            .action-buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar-resume">
+            <div class="logo-resume">
+                <h3>ATS Analysis</h3>
+            </div>
+            <div class="nav-links">
+                <a href="/resume/list" class="nav-link"><i class="fas fa-list"></i> My Resumes</a>
+            </div>
+        </nav>
+
+        <div class="analysis-container">
+            <div class="analysis-header">
+                <div>
+                    <h1 class="analysis-title"><%- resume.resumeTitle %></h1>
+                    <p class="last-analyzed">
+                        <i class="fas fa-clock"></i> Last analyzed: <%- formatDate(resume.lastAnalyzed) %>
+                    </p>
+                </div>
+                <div class="score-circle <%- getScoreClass(resume.atsScore) %>">
+                    <div class="score-value"><%- resume.atsScore %></div>
+                    <div class="score-label"><%- getScoreLabel(resume.atsScore) %></div>
+                </div>
+            </div>
+
+            <!-- Score Cards -->
+            <div class="analysis-grid">
+                <div class="score-card">
+                    <div class="score-card-title">
+                        <i class="fas fa-file-alt"></i> Formatting Score
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill formatting" id="formattingBar" data-score="<%- resume.formattingScore %>" data-max="25">
+                            <%- resume.formattingScore %>/25
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <div class="score-card-title">
+                        <i class="fas fa-search"></i> Keyword Score
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill keyword" id="keywordBar" data-score="<%- resume.keywordScore %>" data-max="40">
+                            <%- resume.keywordScore %>/40
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <div class="score-card-title">
+                        <i class="fas fa-sitemap"></i> Structure Score
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill structure" id="structureBar" data-score="<%- resume.structureScore %>" data-max="35">
+                            <%- resume.structureScore %>/35
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strengths Section -->
+            <div class="section-container">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> Strengths
+                </h2>
+                <ul class="strengths-list">
+                    <% resume.strengths.forEach(strength => { %>
+                        <li class="strength-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div class="item-text">
+                                <div class="item-title"><%- strength %></div>
+                            </div>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- Suggestions Section -->
+            <div class="section-container">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i> Improvement Suggestions
+                </h2>
+                <ul class="suggestions-list">
+                    <% resume.atsSuggestions.forEach(suggestion => { %>
+                        <li class="suggestion-item">
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="item-text">
+                                <div class="item-title"><%- suggestion %></div>
+                            </div>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- Missing Keywords Section -->
+            <% if (resume.missingKeywords && resume.missingKeywords.length > 0) { %>
+                <div class="section-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-exclamation-circle"></i> Missing Keywords (<%- resume.missingKeywords.length %>)
+                    </h2>
+                    <p style="color: #666; margin-bottom: 1rem;">
+                        Consider adding these keywords to improve your ATS compatibility:
+                    </p>
+                    <div class="keywords-grid">
+                        <% resume.missingKeywords.forEach(keyword => { %>
+                            <div class="keyword-tag missing">
+                                <i class="fas fa-plus-circle"></i> <%- keyword %>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/resume/<%- resume.id %>" class="btn-secondary">
+                    <i class="fas fa-eye"></i> View Resume
+                </a>
+                <a href="/resume/<%- resume.id %>/download-pdf" class="btn-secondary">
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+                <a href="/resume/<%- resume.id %>/edit" class="btn-primary">
+                    <i class="fas fa-edit"></i> Edit Resume
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getScoreClass(score) {
+            if (score >= 85) return 'excellent';
+            if (score >= 75) return 'good';
+            if (score >= 50) return 'fair';
+            return 'poor';
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 85) return 'Excellent';
+            if (score >= 75) return 'Good';
+            if (score >= 50) return 'Fair';
+            return 'Poor';
+        }
+
+        // Set score bar widths on page load
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.score-fill');
+            bars.forEach(bar => {
+                const score = parseInt(bar.getAttribute('data-score'));
+                const max = parseInt(bar.getAttribute('data-max'));
+                const width = (score / max) * 100;
+                bar.style.width = width + '%';
+            });
+        });
+    </script>
+</body>
+</html>

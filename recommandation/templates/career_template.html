@@ -1,34 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Career Details</title>
-		<link
-			rel="stylesheet"
-			href="{{ url_for('static', filename='style.css') }}"
-		/>
-	</head>
-	<body>
-		<div class="container">
-			<h1 class="title">Career Details</h1>
-			<h2 class="career-name">{{ career }}</h2>
-			<p class="career-salary">Salary: {{ salary }}</p>
-			<p class="career-description">Job Description: {{ job_description }}</p>
-			<p class="career-security">Job Security: {{ job_security }}</p>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Development Path - {{ career }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-			<!-- Display topics to be covered -->
-			<p class="topics">Topics to Be Covered:</p>
-			<ul>
-				{% for topic in topics_covered %}
-				<li>{{ topic }}</li>
-				{% endfor %}
-			</ul>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
 
-			<!-- Add a button or link to take the aptitude test -->
-			<a href="/aptitude_test" class="aptitude-link">
-				<button class="apt-test-btn">Aptitude Test</button>
-			</a>
-		</div>
-	</body>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            color: #1a1a1a;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fb;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #2563eb;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: #1a1a1a;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .job-description {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .roadmap-section {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            color: #1a1a1a;
+            font-size: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            font-size: 24px;
+            color: #2563eb;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #2563eb;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 20px;
+            width: 3px;
+            height: calc(100% + 10px);
+            background: #e5e7eb;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-item h3 {
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .timeline-item p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .course-list {
+            background: #f8f9fb;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .course-item {
+            background: white;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #2563eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .course-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .course-duration {
+            background: #2563eb;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .skill-badge {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-badge:hover {
+            transform: translateY(-3px);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .project-card {
+            background: #f8f9fb;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .project-title {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .project-desc {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .difficulty {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty.beginner {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .difficulty.intermediate {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .difficulty.advanced {
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f9ff;
+        }
+
+        .duration-badge {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px;
+            }
+
+            .roadmap-section {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .header-info {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>{{ career }}</h1>
+            
+            <div class="header-info">
+                <div class="info-card">
+                    <div class="info-label">Expected Salary</div>
+                    <div class="info-value">${{ salary }}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Job Security</div>
+                    <div class="info-value">{{ job_security }}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Demand Level</div>
+                    <div class="info-value">High</div>
+                </div>
+            </div>
+
+            <div class="job-description">
+                <strong>Role Description:</strong> {{ job_description }}
+            </div>
+        </div>
+
+        <!-- Learning Roadmap Timeline -->
+        <div class="roadmap-section">
+            <div class="section-title">
+                <i class="fas fa-graduation-cap"></i> Your 12-Month Learning Roadmap
+            </div>
+            
+            <div class="timeline">
+                <!-- Month 1-2 -->
+                <div class="timeline-item">
+                    <h3>Months 1-2: Foundation Building</h3>
+                    <p>Master the fundamentals and basic concepts</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Core Concepts & Fundamentals</span>
+                            <span class="course-duration">8 weeks</span>
+                        </div>
+                        <div class="course-item">
+                            <span class="course-name">Programming Basics</span>
+                            <span class="course-duration">6 weeks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month 3-4 -->
+                <div class="timeline-item">
+                    <h3>Months 3-4: Core Skills Development</h3>
+                    <p>Learn specialized skills for this career path</p>
+                    <div class="course-list">
+                        {% for topic in topics_covered %}
+                        <div class="course-item">
+                            <span class="course-name">{{ topic }}</span>
+                            <span class="course-duration">4 weeks</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Month 5-7 -->
+                <div class="timeline-item">
+                    <h3>Months 5-7: Advanced Learning & Certifications</h3>
+                    <p>Pursue industry-recognized certifications</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Professional Certification Course</span>
+                            <span class="course-duration">12 weeks</span>
+                        </div>
+                        <div class="course-item">
+                            <span class="course-name">Advanced Specialization</span>
+                            <span class="course-duration">8 weeks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month 8-10 -->
+                <div class="timeline-item">
+                    <h3>Months 8-10: Project-Based Learning</h3>
+                    <p>Build real-world projects and gain practical experience</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Industry Projects (3-4)</span>
+                            <span class="course-duration">12 weeks</span>
+                        </div>
+                        <div class="course-item">
+                            <span class="course-name">Collaboration & Open Source</span>
+                            <span class="course-duration">Ongoing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month 11-12 -->
+                <div class="timeline-item">
+                    <h3>Months 11-12: Portfolio & Interview Prep</h3>
+                    <p>Finalize your portfolio and prepare for interviews</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Portfolio Development</span>
+                            <span class="course-duration">8 weeks</span>
+                        </div>
+                        <div class="course-item">
+                            <span class="course-name">Interview Preparation</span>
+                            <span class="course-duration">4 weeks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Skills to Develop -->
+        <div class="roadmap-section">
+            <div class="section-title">
+                <i class="fas fa-lightbulb"></i> Essential Skills You'll Learn
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-badge">
+                    <i class="fas fa-code"></i><br>Technical Skills
+                </div>
+                <div class="skill-badge">
+                    <i class="fas fa-puzzle-piece"></i><br>Problem Solving
+                </div>
+                <div class="skill-badge">
+                    <i class="fas fa-users"></i><br>Teamwork
+                </div>
+                <div class="skill-badge">
+                    <i class="fas fa-comments"></i><br>Communication
+                </div>
+                <div class="skill-badge">
+                    <i class="fas fa-lightbulb"></i><br>Innovation
+                </div>
+                <div class="skill-badge">
+                    <i class="fas fa-chart-line"></i><br>Data Analysis
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommended Projects -->
+        <div class="roadmap-section">
+            <div class="section-title">
+                <i class="fas fa-project-diagram"></i> Capstone Projects to Build
+            </div>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-title">Project 1: Beginner Challenge</div>
+                    <div class="project-desc">Create a foundational project to understand core concepts and get hands-on experience.</div>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title">Project 2: Intermediate Build</div>
+                    <div class="project-desc">Develop a more complex project combining multiple skills and technologies.</div>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title">Project 3: Advanced Integration</div>
+                    <div class="project-desc">Build a production-level project showcasing mastery of all learned skills.</div>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title">Project 4: Portfolio Showcase</div>
+                    <div class="project-desc">Create a standout project to demonstrate your expertise to potential employers.</div>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications Path -->
+        <div class="roadmap-section">
+            <div class="section-title">
+                <i class="fas fa-award"></i> Certifications to Pursue
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Level 1: Foundation Certification</h3>
+                    <p>Validate your foundational knowledge and earn industry recognition</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Certified Associate Professional</span>
+                            <span class="course-duration">4-6 weeks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>Level 2: Professional Certification</h3>
+                    <p>Demonstrate intermediate expertise in your chosen field</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Professional Developer Certification</span>
+                            <span class="course-duration">8-10 weeks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>Level 3: Expert Certification</h3>
+                    <p>Achieve advanced certification and become an industry expert</p>
+                    <div class="course-list">
+                        <div class="course-item">
+                            <span class="course-name">Expert/Senior Level Certification</span>
+                            <span class="course-duration">10-12 weeks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="roadmap-section">
+            <div class="section-title">
+                <i class="fas fa-play-circle"></i> Get Started Today
+            </div>
+            
+            <p style="color: #6b7280; margin-bottom: 20px; font-size: 16px;">
+                This is your personalized career development plan. Follow this roadmap consistently to achieve your goal of becoming a successful {{ career }}. Remember, consistency and dedication are key!
+            </p>
+
+            <div class="cta-buttons">
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Recommendations
+                </a>
+                <a href="/aptitude_test" class="btn btn-primary">
+                    <i class="fas fa-graduation-cap"></i> Take Aptitude Test
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

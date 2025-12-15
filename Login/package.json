@@ -16,6 +16,7 @@
     "express-session": "^1.17.3",
     "mongodb": "^4.2.2",
     "mongoose": "^6.12.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "pdfkit": "^0.13.0"
   }
 }

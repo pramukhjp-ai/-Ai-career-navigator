@@ -1,45 +1,60 @@
+// Login/app.js
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const path = require('path');
+
 const homeRouter = require('./routers/homeRouter');
+const resumeRouter = require('./routers/resumeRouter');
 const port = process.env.PORT || 8080;
 
 const app = express();
-app.set('views','./views')
-app.set('view engine','ejs')
-app.get('',(req,res)=>{
-    res.render('register',{title: 'Fill Form', password: '', email: ''})
-})
-app.get('/iq',(req,res)=>{
-    res.render('iq',{text: 'iq'})
-})
-app.get('/trivia',(req,res)=>{
-    res.render('trivia',{text: 'trivia'})
-})
-app.get('/chat',(req,res)=>{
-    res.render('chat',{text: 'chat'})
-})
-// Add session middleware with a manually set secret key
+
+// ---- views + view engine ----
+app.set('views', path.join(__dirname, 'views')); // ensures correct absolute path
+app.set('view engine', 'ejs');
+
+// ---- middleware ----
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(express.json());
+
+// ---- session (must be before mounting router) ----
 app.use(session({
-    secret: '416411654161', // Replace with your chosen secret key
-    resave: false,
-    saveUninitialized: true,
+  name: 'itnav.sid',
+  secret: 'replace_this_with_a_strong_secret', // change in production
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 2, // 2 hours
+    httpOnly: true,
+    // secure: true // enable in production with HTTPS
+  }
 }));
 
-// db con
-mongoose.connect('mongodb://127.0.0.1:27017/studentsdata', { useNewUrlParser: true });
+// ---- database ----
+mongoose.connect('mongodb://127.0.0.1:27017/studentsdata', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
-
 db.on("error", () => { console.log("error in connection"); });
-db.once('open', () => { console.log("Connected"); });
+db.once('open', () => { console.log("Connected to MongoDB"); });
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use('/', homeRouter);
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// ---- static quick routes (optional) ----
+app.get('/', (req, res) => {
+  // If user logged in redirect to dashboard, otherwise show register/login
+  if (req.session && req.session.user) return res.redirect('/dashboard');
+  res.render('register', { title: 'Fill Form', password: '', email: '' });
 });
+
+app.get('/iq', (req, res) => res.render('iq', { text: 'iq' }));
+app.get('/trivia', (req, res) => res.render('trivia', { text: 'trivia' }));
+app.get('/chat', (req, res) => res.render('chat', { text: 'chat' }));
+
+// ---- mount routers (after session & parsing middleware) ----
+app.use('/', homeRouter);
+app.use('/resume', resumeRouter);
+
+// ---- start server ----
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+

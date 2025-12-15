@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Builder</title>
+    <link rel="stylesheet" href="/css/resume.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <div class="container-resume">
+        <nav class="navbar-resume">
+            <div class="logo-resume">
+                <h3>Resume Builder</h3>
+            </div>
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="/resume/list" class="nav-link"><i class="fas fa-list"></i> My Resumes</a>
+            </div>
+        </nav>
+
+        <div class="resume-builder-wrapper">
+            <!-- Form Section -->
+            <div class="form-section">
+                <form id="resumeForm" class="resume-form">
+                    <div class="form-header">
+                        <h2>Create Your Professional Resume</h2>
+                        <p>Fill in all sections to optimize for ATS systems</p>
+                    </div>
+
+                    <!-- Resume Title -->
+                    <div class="form-group">
+                        <label for="resumeTitle">Resume Title *</label>
+                        <input 
+                            type="text" 
+                            id="resumeTitle" 
+                            name="resumeTitle" 
+                            placeholder="e.g., Senior Developer Resume 2025"
+                            required
+                            maxlength="100"
+                        />
+                        <small>e.g., Software Engineer Resume, Data Scientist Resume</small>
+                    </div>
+
+                    <!-- Personal Information Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName" 
+                                placeholder="John"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                name="lastName" 
+                                placeholder="Doe"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="john@example.com"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone *</label>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone" 
+                                placeholder="+1-9876543210"
+                                required
+                                pattern="^(\+\d{1,3}[- ]?)?\d{10}$"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">Location *</label>
+                            <input 
+                                type="text" 
+                                id="location" 
+                                name="location" 
+                                placeholder="San Francisco, CA"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedIn">LinkedIn URL</label>
+                            <input 
+                                type="url" 
+                                id="linkedIn" 
+                                name="linkedIn" 
+                                placeholder="https://linkedin.com/in/johndoe"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="portfolio">Portfolio URL</label>
+                        <input 
+                            type="url" 
+                            id="portfolio" 
+                            name="portfolio" 
+                            placeholder="https://johndoe.com"
+                        />
+                    </div>
+
+                    <!-- Professional Summary -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-briefcase"></i> Professional Summary</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="professionalSummary">Professional Summary</label>
+                        <textarea 
+                            id="professionalSummary" 
+                            name="professionalSummary" 
+                            placeholder="Write a brief summary of your professional background, skills, and career goals..."
+                            rows="4"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="summaryCount">0</span>/500
+                        </div>
+                    </div>
+
+                    <!-- Experience Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-briefcase"></i> Work Experience</h3>
+                    </div>
+
+                    <div id="experienceContainer"></div>
+                    <button type="button" class="btn-add-section" id="addExperienceBtn">
+                        <i class="fas fa-plus"></i> Add Experience
+                    </button>
+
+                    <!-- Education Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                    </div>
+
+                    <div id="educationContainer"></div>
+                    <button type="button" class="btn-add-section" id="addEducationBtn">
+                        <i class="fas fa-plus"></i> Add Education
+                    </button>
+
+                    <!-- Skills Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-star"></i> Skills</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skillInput">Add Skills (Press Enter or click Add)</label>
+                        <div class="skill-input-group">
+                            <input 
+                                type="text" 
+                                id="skillInput" 
+                                placeholder="e.g., Python, JavaScript, React, MongoDB"
+                            />
+                            <button type="button" class="btn-add-skill" id="addSkillBtn">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="skillsContainer" class="skills-container"></div>
+                    <small class="hint">Skills help improve your ATS score. Aim for 5-15 relevant skills.</small>
+
+                    <!-- Certifications Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                    </div>
+
+                    <div id="certificationsContainer"></div>
+                    <button type="button" class="btn-add-section" id="addCertificationBtn">
+                        <i class="fas fa-plus"></i> Add Certification
+                    </button>
+
+                    <!-- Projects Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-code"></i> Projects</h3>
+                    </div>
+
+                    <div id="projectsContainer"></div>
+                    <button type="button" class="btn-add-section" id="addProjectBtn">
+                        <i class="fas fa-plus"></i> Add Project
+                    </button>
+
+                    <!-- Languages Section -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-globe"></i> Languages</h3>
+                    </div>
+
+                    <div id="languagesContainer"></div>
+                    <button type="button" class="btn-add-section" id="addLanguageBtn">
+                        <i class="fas fa-plus"></i> Add Language
+                    </button>
+
+                    <!-- Job Description (Optional) -->
+                    <div class="form-section-divider">
+                        <h3><i class="fas fa-file-alt"></i> Job Description (Optional)</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobDescription">Paste Job Description</label>
+                        <textarea 
+                            id="jobDescription" 
+                            name="jobDescription" 
+                            placeholder="Paste the job description here to improve ATS matching and keyword optimization..."
+                            rows="6"
+                            maxlength="2000"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="jobDescCount">0</span>/2000
+                        </div>
+                        <small class="hint">Optional: This helps identify missing keywords and improves ATS compatibility analysis.</small>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Resume
+                        </button>
+                        <button type="reset" class="btn-secondary">
+                            <i class="fas fa-redo"></i> Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h2>Preview</h2>
+                    <button id="previewToggle" class="btn-toggle-preview">
+                        <i class="fas fa-eye"></i> Hide Preview
+                    </button>
+                </div>
+
+                <div id="resumePreview" class="resume-preview">
+                    <div class="preview-content">
+                        <!-- Header -->
+                        <div class="preview-header-section">
+                            <div class="preview-name">
+                                <span id="previewFirstName">John</span>
+                                <span id="previewLastName">Doe</span>
+                            </div>
+                            <div class="preview-contact">
+                                <span id="previewEmail">john@example.com</span> |
+                                <span id="previewPhone">+1-9876543210</span> |
+                                <span id="previewLocation">San Francisco, CA</span>
+                            </div>
+                        </div>
+
+                        <!-- Professional Summary -->
+                        <div id="previewSummarySection" class="preview-section hidden">
+                            <h3>PROFESSIONAL SUMMARY</h3>
+                            <p id="previewSummary"></p>
+                        </div>
+
+                        <!-- Experience -->
+                        <div id="previewExperienceSection" class="preview-section hidden">
+                            <h3>PROFESSIONAL EXPERIENCE</h3>
+                            <div id="previewExperienceContent"></div>
+                        </div>
+
+                        <!-- Education -->
+                        <div id="previewEducationSection" class="preview-section hidden">
+                            <h3>EDUCATION</h3>
+                            <div id="previewEducationContent"></div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div id="previewSkillsSection" class="preview-section hidden">
+                            <h3>SKILLS</h3>
+                            <div id="previewSkillsContent" class="skills-list"></div>
+                        </div>
+
+                        <!-- Certifications -->
+                        <div id="previewCertificationsSection" class="preview-section hidden">
+                            <h3>CERTIFICATIONS</h3>
+                            <div id="previewCertificationsContent"></div>
+                        </div>
+
+                        <!-- Projects -->
+                        <div id="previewProjectsSection" class="preview-section hidden">
+                            <h3>PROJECTS</h3>
+                            <div id="previewProjectsContent"></div>
+                        </div>
+
+                        <!-- Languages -->
+                        <div id="previewLanguagesSection" class="preview-section hidden">
+                            <h3>LANGUAGES</h3>
+                            <div id="previewLanguagesContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/resume_builder.js"></script>
+</body>
+</html>

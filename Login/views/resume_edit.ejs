@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Resume - <%- resume.resumeTitle %></title>
+    <link rel="stylesheet" href="/css/resume.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-resume {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-resume h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .edit-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+        }
+
+        .edit-header {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .edit-title {
+            margin: 0;
+            color: #667eea;
+        }
+
+        .save-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-save,
+        .btn-cancel {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: #51cf66;
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            background: #37b24d;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-section {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .dynamic-sections {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dynamic-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .dynamic-section-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .dynamic-section-header .btn-remove {
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .dynamic-section-header .btn-remove:hover {
+            background: #fa5252;
+        }
+
+        .btn-add-section {
+            background: #667eea;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-section:hover {
+            background: #764ba2;
+        }
+
+        .skills-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skills-input-group input {
+            flex: 1;
+        }
+
+        .skills-input-group button {
+            background: #667eea;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .skills-input-group button:hover {
+            background: #764ba2;
+        }
+
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #e8f4f8;
+            color: #667eea;
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .skill-tag button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .skill-tag button:hover {
+            color: #ff6b6b;
+        }
+
+        .char-counter {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+
+        .char-counter.warning {
+            color: #ffd43b;
+        }
+
+        .char-counter.error {
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .edit-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .save-buttons {
+                width: 100%;
+            }
+
+            .save-buttons button {
+                flex: 1;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar-resume">
+            <div class="logo-resume">
+                <h3>Edit Resume</h3>
+            </div>
+            <div class="nav-links">
+                <a href="/resume/list" class="nav-link"><i class="fas fa-list"></i> My Resumes</a>
+            </div>
+        </nav>
+
+        <div class="edit-container">
+            <div class="edit-header">
+                <h1 class="edit-title"><%- resume.resumeTitle %></h1>
+                <div class="save-buttons">
+                    <button class="btn-cancel" onclick="window.history.back()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn-save" onclick="saveResume('<%- resume.id %>')">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <form id="editResumeForm" class="form-grid">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-user"></i> Personal Information
+                        </h2>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-input" name="firstName" 
+                                    value="<%- resume.personalInfo.firstName %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-input" name="lastName" 
+                                    value="<%- resume.personalInfo.lastName %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-input" name="email" 
+                                    value="<%- resume.personalInfo.email %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" class="form-input" name="phone" 
+                                    value="<%- resume.personalInfo.phone %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-input" name="location" 
+                                    value="<%- resume.personalInfo.location || '' %>">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn Profile</label>
+                                <input type="url" class="form-input" name="linkedin" 
+                                    value="<%- resume.personalInfo.linkedin || '' %>">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Portfolio Website</label>
+                                <input type="url" class="form-input" name="portfolio" 
+                                    value="<%- resume.personalInfo.portfolio || '' %>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Summary -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-align-left"></i> Professional Summary
+                        </h2>
+
+                        <div class="form-group">
+                            <label class="form-label">Summary</label>
+                            <textarea class="form-textarea" name="summary" maxlength="500" 
+                                oninput="updateCharCounter(this, 500)"><%- resume.professionalSummary || '' %></textarea>
+                            <div class="char-counter">
+                                <span id="summaryCount"><%- (resume.professionalSummary || '').length %></span>/500 characters
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-star"></i> Skills
+                        </h2>
+
+                        <div class="skills-input-group">
+                            <input type="text" class="form-input" id="skillInput" placeholder="Add a skill (max 50)">
+                            <button type="button" onclick="addSkill()">Add</button>
+                        </div>
+
+                        <div id="skillsList" style="margin-bottom: 1rem;">
+                            <% resume.skills.forEach(skill => { %>
+                                <span class="skill-tag">
+                                    <%- skill %>
+                                    <button type="button" onclick="this.parentElement.remove()">×</button>
+                                </span>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+                    <!-- Experience -->
+                    <div class="dynamic-sections">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-briefcase"></i> Experience
+                        </h2>
+
+                        <div id="experienceList">
+                            <% resume.experience.forEach((exp, index) => { %>
+                                <div class="dynamic-section" data-index="<%- index %>">
+                                    <div class="dynamic-section-header">
+                                        <h3><%- exp.jobTitle %> at <%- exp.company %></h3>
+                                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Job Title</label>
+                                            <input type="text" class="form-input" value="<%- exp.jobTitle %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Company</label>
+                                            <input type="text" class="form-input" value="<%- exp.company %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Start Date</label>
+                                            <input type="date" class="form-input" value="<%- exp.startDate.split('T')[0] %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">End Date</label>
+                                            <input type="date" class="form-input" value="<%- exp.endDate ? exp.endDate.split('T')[0] : '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">Location</label>
+                                            <input type="text" class="form-input" value="<%- exp.location || '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-textarea"><%- exp.description || '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <button type="button" class="btn-add-section" onclick="addExperienceForm()">
+                            <i class="fas fa-plus"></i> Add Experience
+                        </button>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="dynamic-sections">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-graduation-cap"></i> Education
+                        </h2>
+
+                        <div id="educationList">
+                            <% resume.education.forEach((edu, index) => { %>
+                                <div class="dynamic-section" data-index="<%- index %>">
+                                    <div class="dynamic-section-header">
+                                        <h3><%- edu.degree %> in <%- edu.field %></h3>
+                                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Degree</label>
+                                            <input type="text" class="form-input" value="<%- edu.degree %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Field of Study</label>
+                                            <input type="text" class="form-input" value="<%- edu.field %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">School</label>
+                                            <input type="text" class="form-input" value="<%- edu.school %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Graduation Date</label>
+                                            <input type="date" class="form-input" value="<%- edu.graduationDate.split('T')[0] %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">GPA</label>
+                                            <input type="text" class="form-input" value="<%- edu.gpa || '' %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <button type="button" class="btn-add-section" onclick="addEducationForm()">
+                            <i class="fas fa-plus"></i> Add Education
+                        </button>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="dynamic-sections">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-certificate"></i> Certifications
+                        </h2>
+
+                        <div id="certificationList">
+                            <% resume.certifications.forEach((cert, index) => { %>
+                                <div class="dynamic-section" data-index="<%- index %>">
+                                    <div class="dynamic-section-header">
+                                        <h3><%- cert.certificationName %></h3>
+                                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Certification Name</label>
+                                            <input type="text" class="form-input" value="<%- cert.certificationName %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Issuer</label>
+                                            <input type="text" class="form-input" value="<%- cert.issuer %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Issue Date</label>
+                                            <input type="date" class="form-input" value="<%- cert.issueDate.split('T')[0] %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <button type="button" class="btn-add-section" onclick="addCertificationForm()">
+                            <i class="fas fa-plus"></i> Add Certification
+                        </button>
+                    </div>
+
+                    <!-- Projects -->
+                    <div class="dynamic-sections">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-code"></i> Projects
+                        </h2>
+
+                        <div id="projectList">
+                            <% resume.projects.forEach((project, index) => { %>
+                                <div class="dynamic-section" data-index="<%- index %>">
+                                    <div class="dynamic-section-header">
+                                        <h3><%- project.projectName %></h3>
+                                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">Project Name</label>
+                                            <input type="text" class="form-input" value="<%- project.projectName %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">Technologies</label>
+                                            <input type="text" class="form-input" value="<%- project.technologies || '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row full">
+                                        <div class="form-group">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-textarea"><%- project.description %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <button type="button" class="btn-add-section" onclick="addProjectForm()">
+                            <i class="fas fa-plus"></i> Add Project
+                        </button>
+                    </div>
+
+                    <!-- Languages -->
+                    <div class="dynamic-sections">
+                        <h2 class="form-section-title">
+                            <i class="fas fa-language"></i> Languages
+                        </h2>
+
+                        <div id="languageList">
+                            <% resume.languages.forEach((lang, index) => { %>
+                                <div class="dynamic-section" data-index="<%- index %>">
+                                    <div class="dynamic-section-header">
+                                        <h3><%- lang.language %> - <%- lang.proficiency %></h3>
+                                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Language</label>
+                                            <input type="text" class="form-input" value="<%- lang.language %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Proficiency</label>
+                                            <select class="form-select">
+                                                <option <%- lang.proficiency === 'Beginner' ? 'selected' : '' %>>Beginner</option>
+                                                <option <%- lang.proficiency === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
+                                                <option <%- lang.proficiency === 'Advanced' ? 'selected' : '' %>>Advanced</option>
+                                                <option <%- lang.proficiency === 'Native' ? 'selected' : '' %>>Native</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <button type="button" class="btn-add-section" onclick="addLanguageForm()">
+                            <i class="fas fa-plus"></i> Add Language
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/resume_builder.js"></script>
+    <script>
+        function updateCharCounter(element, max) {
+            const count = element.value.length;
+            const countElement = document.getElementById('summaryCount');
+            if (countElement) {
+                countElement.textContent = count;
+                const counter = countElement.parentElement;
+                counter.classList.toggle('warning', count > max * 0.8);
+                counter.classList.toggle('error', count > max);
+            }
+        }
+
+        function removeSection(button) {
+            button.closest('.dynamic-section').remove();
+        }
+
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            const skill = input.value.trim();
+            
+            if (!skill) return;
+            
+            const skillsList = document.getElementById('skillsList');
+            const existingSkills = Array.from(skillsList.querySelectorAll('.skill-tag')).map(el => el.textContent.trim());
+            
+            if (existingSkills.includes(skill)) {
+                alert('This skill is already added');
+                return;
+            }
+            
+            if (existingSkills.length >= 50) {
+                alert('Maximum 50 skills allowed');
+                return;
+            }
+            
+            const skillTag = document.createElement('span');
+            skillTag.className = 'skill-tag';
+            skillTag.innerHTML = `
+                ${skill}
+                <button type="button" onclick="this.parentElement.remove()">×</button>
+            `;
+            skillsList.appendChild(skillTag);
+            input.value = '';
+        }
+
+        async function saveResume(resumeId) {
+            const form = document.getElementById('editResumeForm');
+            const formData = new FormData(form);
+
+            // Collect personal info
+            const personalInfo = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                location: formData.get('location') || '',
+                linkedin: formData.get('linkedin') || '',
+                portfolio: formData.get('portfolio') || ''
+            };
+
+            // Collect skills
+            const skills = Array.from(document.querySelectorAll('.skill-tag')).map(el => 
+                el.textContent.trim().replace('×', '').trim()
+            );
+
+            // Collect dynamic data
+            const experience = collectDynamicData('experienceList', ['jobTitle', 'company', 'startDate', 'endDate', 'location', 'description'], 'experience');
+            const education = collectDynamicData('educationList', ['degree', 'field', 'school', 'graduationDate', 'gpa'], 'education');
+            const certifications = collectDynamicData('certificationList', ['certificationName', 'issuer', 'issueDate'], 'certifications');
+            const projects = collectDynamicData('projectList', ['projectName', 'technologies', 'description'], 'projects');
+            const languages = collectDynamicData('languageList', ['language', 'proficiency'], 'languages');
+
+            const resumeData = {
+                resumeTitle: form.dataset.title || 'Updated Resume',
+                personalInfo,
+                professionalSummary: formData.get('summary') || '',
+                skills,
+                experience,
+                education,
+                certifications,
+                projects,
+                languages
+            };
+
+            try {
+                const response = await fetch(`/resume/${resumeId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(resumeData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Resume updated successfully!');
+                    window.location.href = `/resume/${resumeId}`;
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error saving resume: ' + error.message);
+            }
+        }
+
+        function collectDynamicData(containerId, fields, type) {
+            const container = document.getElementById(containerId);
+            const sections = container.querySelectorAll('.dynamic-section');
+            const data = [];
+
+            sections.forEach(section => {
+                const inputs = section.querySelectorAll('input, textarea, select');
+                const item = {};
+                
+                inputs.forEach((input, index) => {
+                    if (index < fields.length) {
+                        item[fields[index]] = input.value;
+                    }
+                });
+
+                // Add type-specific defaults
+                if (type === 'experience') {
+                    item.isCurrentlyWorking = false;
+                } else if (type === 'languages') {
+                    item.proficiency = item.proficiency || 'Intermediate';
+                }
+
+                data.push(item);
+            });
+
+            return data;
+        }
+
+        // Placeholder functions for dynamic section management
+        function addExperienceForm() {
+            const container = document.getElementById('experienceList');
+            container.innerHTML += `
+                <div class="dynamic-section">
+                    <div class="dynamic-section-header">
+                        <h3>New Experience</h3>
+                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Company</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addEducationForm() {
+            const container = document.getElementById('educationList');
+            container.innerHTML += `
+                <div class="dynamic-section">
+                    <div class="dynamic-section-header">
+                        <h3>New Education</h3>
+                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Degree</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Field of Study</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">School</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Graduation Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">GPA</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addCertificationForm() {
+            const container = document.getElementById('certificationList');
+            container.innerHTML += `
+                <div class="dynamic-section">
+                    <div class="dynamic-section-header">
+                        <h3>New Certification</h3>
+                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Certification Name</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issuer</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Issue Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addProjectForm() {
+            const container = document.getElementById('projectList');
+            container.innerHTML += `
+                <div class="dynamic-section">
+                    <div class="dynamic-section-header">
+                        <h3>New Project</h3>
+                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Project Name</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Technologies</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addLanguageForm() {
+            const container = document.getElementById('languageList');
+            container.innerHTML += `
+                <div class="dynamic-section">
+                    <div class="dynamic-section-header">
+                        <h3>New Language</h3>
+                        <button type="button" class="btn-remove" onclick="removeSection(this)">Remove</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Proficiency</label>
+                            <select class="form-select">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                                <option>Native</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
